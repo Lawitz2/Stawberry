@@ -8,6 +8,12 @@ import (
 	"github.com/spf13/viper"
 )
 
+var (
+	EnvDev  = "dev"
+	EnvTest = "test"
+	EnvProd = "prod"
+)
+
 type TokenConfig struct {
 	Secret               string
 	AccessTokenDuration  time.Duration
@@ -27,6 +33,7 @@ type Config struct {
 	URL           string
 	SigningRegion string
 	Token         TokenConfig
+	Environment   string
 }
 
 func LoadConfig() *Config {
@@ -51,6 +58,7 @@ func LoadConfig() *Config {
 		BucketName:    viper.GetString("BUCKET_NAME"),
 		URL:           viper.GetString("URL"),
 		SigningRegion: viper.GetString("SIGNING_REGION"),
+		Environment:   viper.GetString("ENVIRONMENT"),
 		Token: TokenConfig{
 			Secret:               viper.GetString("TOKEN_SECRET"),
 			AccessTokenDuration:  viper.GetDuration("TOKEN_ACCESS_DURATION"),

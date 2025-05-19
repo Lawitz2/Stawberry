@@ -8,8 +8,10 @@ import (
 	"github.com/EM-Stawberry/Stawberry/internal/domain/service/notification"
 	"github.com/EM-Stawberry/Stawberry/internal/domain/service/token"
 	"github.com/EM-Stawberry/Stawberry/internal/domain/service/user"
+	"github.com/EM-Stawberry/Stawberry/internal/handler/middleware"
 
 	"github.com/EM-Stawberry/Stawberry/internal/repository"
+	"github.com/EM-Stawberry/Stawberry/pkg/logger"
 	"github.com/EM-Stawberry/Stawberry/pkg/migrator"
 
 	"github.com/EM-Stawberry/Stawberry/config"
@@ -48,40 +50,62 @@ func main() {
 func initializeApp() error {
 	// Load configuration
 	cfg := config.LoadConfig()
+	log := logger.SetupLogger(cfg.Environment)
+	log.Info("Config initialized")
+	log.Info("Logger initialized")
 
 	// Set Gin mode based on environment
 	if os.Getenv("GIN_MODE") == "release" {
 		gin.SetMode(gin.ReleaseMode)
 	}
 
+	// Настраиваем Gin на использование Zap логгера
+	middleware.SetupGinWithZap(log)
+
 	// Initialize database connection
 	db := repository.InitDB(cfg)
+	log.Info("Connection initialized")
 
 	db.SetMaxOpenConns(25)
 	db.SetMaxIdleConns(10)
 
-	// Run migrations
-	migrator.RunMigrations(db, "migrations")
+	// Run migrations using Zap logger
+	migrator.RunMigrationsWithZap(db, "migrations", log)
 
 	productRepository := repository.NewProductRepository(db)
 	offerRepository := repository.NewOfferRepository(db)
 	userRepository := repository.NewUserRepository(db)
 	notificationRepository := repository.NewNotificationRepository(db)
 	tokenRepository := repository.NewTokenRepository(db)
+	log.Info("Repositories initialized")
 
 	productService := product.NewProductService(productRepository)
 	offerService := offer.NewOfferService(offerRepository)
 	tokenService := token.NewTokenService(tokenRepository, cfg.Token.Secret, cfg.Token.AccessTokenDuration, cfg.Token.RefreshTokenDuration)
 	userService := user.NewUserService(userRepository, tokenService)
 	notificationService := notification.NewNotificationService(notificationRepository)
+	log.Info("Services initialized")
 
 	productHandler := handler.NewProductHandler(productService)
 	offerHandler := handler.NewOfferHandler(offerService)
 	userHandler := handler.NewUserHandler(userService, time.Hour, "api/v1", "")
 	notificationHandler := handler.NewNotificationHandler(notificationService)
-	s3 := objectstorage.ObjectStorageConn(cfg)
+	log.Info("Handlers initialized")
 
-	router = handler.SetupRouter(productHandler, offerHandler, userHandler, notificationHandler, userService, tokenService, s3, "api/v1")
+	s3 := objectstorage.ObjectStorageConn(cfg)
+	log.Info("Storage initialized")
+
+	router = handler.SetupRouter(
+		productHandler,
+		offerHandler,
+		userHandler,
+		notificationHandler,
+		userService,
+		tokenService,
+		s3,
+		"api",
+		log,
+	)
 
 	return nil
 }

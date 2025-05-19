@@ -25,6 +25,7 @@ require (
 	github.com/swaggo/gin-swagger v1.6.0
 	github.com/swaggo/swag v1.16.4
 	go.uber.org/mock v0.5.1
+	go.uber.org/zap v1.21.0
 	golang.org/x/crypto v0.37.0
 	golang.org/x/tools v0.32.0 // indirect
 )
@@ -38,6 +39,7 @@ require (
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20240606120523-5a60cdf6a761 // indirect
 	github.com/jackc/puddle/v2 v2.2.2 // indirect
+	go.uber.org/atomic v1.9.0 // indirect
 )
 
 require (
