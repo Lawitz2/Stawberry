@@ -7,6 +7,10 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/EM-Stawberry/Stawberry/internal/handler/helpers"
+
+	"github.com/EM-Stawberry/Stawberry/internal/app/apperror"
+
 	"github.com/EM-Stawberry/Stawberry/internal/domain/entity"
 	"github.com/EM-Stawberry/Stawberry/internal/domain/service/offer"
 
@@ -18,7 +22,7 @@ type OfferService interface {
 	CreateOffer(ctx context.Context, offer offer.Offer) (uint, error)
 	GetUserOffers(ctx context.Context, userID uint, limit, offset int) ([]entity.Offer, int64, error)
 	GetOffer(ctx context.Context, offerID uint) (entity.Offer, error)
-	UpdateOfferStatus(ctx context.Context, offerID uint, status string) (entity.Offer, error)
+	UpdateOfferStatus(ctx context.Context, offer entity.Offer, userID uint, isStore bool) (entity.Offer, error)
 	DeleteOffer(ctx context.Context, offerID uint) (entity.Offer, error)
 }
 
@@ -40,15 +44,13 @@ func (h *OfferHandler) PostOffer(c *gin.Context) {
 	}
 
 	offer.UserID = userID.(uint)
-	offer.Status = "pending"
-	offer.ExpiresAt = time.Now().Add(24 * time.Hour)
 
-	var response dto.PostOfferResp
-	var err error
-	if response.ID, err = h.offerService.CreateOffer(context.Background(), offer.ConvertToSvc()); err != nil {
-		_ = c.Error(err)
-		return
-	}
+	//var response dto.PostOfferResp
+	//var err error
+	//if response.ID, err = h.offerService.CreateOffer(context.Background(), offer.ConvertToEntity()); err != nil {
+	//	_ = c.Error(err)
+	//	return
+	//}
 
 	// Create notification for store
 	// notification := models.Notification{
@@ -108,32 +110,76 @@ func (h *OfferHandler) GetOffer(c *gin.Context) {
 		return
 	}
 
-	offer, err := h.offerService.GetOffer(context.Background(), uint(id))
+	offerEntity, err := h.offerService.GetOffer(context.Background(), uint(id))
 	if err != nil {
 		_ = c.Error(err)
 		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"data": offer,
+		"data": offerEntity,
 	})
 }
 
+// @summary Update offer status
+// @tags offer
+// @accept json
+// @produce json
+// @param id path int true "Offer ID"
+// @param body body dto.PatchOfferStatusReq true "Offer status update request"
+// @success 200 {object} dto.PatchOfferStatusResp
+// @failure 400 {object} apperror.Error
+// @failure 401 {object} apperror.Error
+// @failure 404 {object} apperror.Error
+// @failure 409 {object} apperror.Error
+// @failure 500 {object} apperror.Error
+// @Router /offers/{offerID} [patch]
 func (h *OfferHandler) PatchOfferStatus(c *gin.Context) {
-	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	ctx, ctxCancel := context.WithTimeout(c.Request.Context(), time.Second*10)
+	defer ctxCancel()
+
+	id, err := strconv.Atoi(c.Param("offerID"))
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid nondigit offer id"})
+		_ = c.Error(apperror.New(apperror.BadRequest, "offerID must be numeric", err))
+		return
+	}
+	if id <= 0 {
+		_ = c.Error(apperror.New(apperror.BadRequest, "offerID must be positive", nil))
 		return
 	}
 
-	// предположу что статус будет лежать в теле запроса
 	var req dto.PatchOfferStatusReq
-	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request: " + err.Error()})
+	if err = c.ShouldBindJSON(&req); err != nil {
+		_ = c.Error(apperror.New(apperror.BadRequest, "status field not provided", err))
 		return
 	}
 
-	offer, err := h.offerService.UpdateOfferStatus(context.Background(), uint(id), req.Status)
+	//tmp, ok := c.Get("user")
+	//usr := tmp.(entity.User)
+	//if !ok {
+	//	c.Error(apperror.New(apperror.InternalError, "user context not found",
+	//		fmt.Errorf("if we're here - someone changed the key at the bottom of auth middleware")))
+	//	return
+	//}
+
+	iid, ok := c.Get(helpers.UserIDKey)
+	if !ok {
+		_ = c.Error(apperror.New(apperror.InternalError,
+			"user id key not found in ctx", nil))
+	}
+	usrID := iid.(uint)
+
+	iisStore, ok := c.Get(helpers.UserIsStoreKey)
+	if !ok {
+		_ = c.Error(apperror.New(apperror.InternalError,
+			"user isstore key not found in ctx", nil))
+	}
+	usrIsStore := iisStore.(bool)
+
+	offerEntity := req.ConvertToEntity()
+	offerEntity.ID = uint(id)
+
+	updatedOffer, err := h.offerService.UpdateOfferStatus(ctx, offerEntity, usrID, usrIsStore)
 	if err != nil {
 		_ = c.Error(err)
 		return
@@ -147,7 +193,7 @@ func (h *OfferHandler) PatchOfferStatus(c *gin.Context) {
 	// }
 	// h.notifyRepo.Create(&notification)
 
-	c.JSON(http.StatusCreated, offer)
+	c.JSON(http.StatusOK, dto.PatchOfferStatusResp{NewStatus: updatedOffer.Status})
 }
 
 func (h *OfferHandler) DeleteOffer(c *gin.Context) {
