@@ -183,6 +183,15 @@ const docTemplate = `{
                             }
                         }
                     },
+                    "404": {
+                        "description": "Продавец не найден",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
                     "500": {
                         "description": "Внутренняя ошибка сервера",
                         "schema": {
@@ -257,6 +266,15 @@ const docTemplate = `{
                             }
                         }
                     },
+                    "404": {
+                        "description": "Продавец не найден",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
                     "500": {
                         "description": "Внутренняя ошибка сервера",
                         "schema": {
@@ -265,6 +283,155 @@ const docTemplate = `{
                                 "type": "string"
                             }
                         }
+                    }
+                }
+            }
+        },
+        "/auth/login": {
+            "post": {
+                "description": "Аутентифицирует пользователя и возвращает токены access/refresh",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Аутентификация пользователя",
+                "parameters": [
+                    {
+                        "description": "Учетные данные пользователя",
+                        "name": "user",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.LoginUserReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.LoginUserResp"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {}
+                    }
+                }
+            }
+        },
+        "/auth/logout": {
+            "post": {
+                "description": "Выход пользователя и инвалидация токена обновления",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Выход из системы",
+                "parameters": [
+                    {
+                        "description": "Данные для выхода",
+                        "name": "logout",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.LogoutReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {}
+                    }
+                }
+            }
+        },
+        "/auth/refresh": {
+            "post": {
+                "description": "Обновляет токены access и refresh",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Обновление токенов",
+                "parameters": [
+                    {
+                        "description": "Данные токена refresh",
+                        "name": "refresh",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.RefreshReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.RefreshResp"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {}
+                    }
+                }
+            }
+        },
+        "/auth/reg": {
+            "post": {
+                "description": "Регистрирует нового пользователя и возвращает токены доступа/обновления",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Регистрация нового пользователя",
+                "parameters": [
+                    {
+                        "description": "Данные для регистрации пользователя",
+                        "name": "user",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.RegistrationUserReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.RegistrationUserResp"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {}
                     }
                 }
             }
@@ -374,6 +541,67 @@ const docTemplate = `{
                 "wrappedErr": {}
             }
         },
+        "dto.AddReviewDTO": {
+            "type": "object",
+            "required": [
+                "rating",
+                "review"
+            ],
+            "properties": {
+                "rating": {
+                    "type": "integer",
+                    "maximum": 5,
+                    "minimum": 1
+                },
+                "review": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.LoginUserReq": {
+            "type": "object",
+            "required": [
+                "email",
+                "fingerprint",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "fingerprint": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.LoginUserResp": {
+            "type": "object",
+            "properties": {
+                "access_token": {
+                    "type": "string"
+                },
+                "refresh_token": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.LogoutReq": {
+            "type": "object",
+            "required": [
+                "fingerprint"
+            ],
+            "properties": {
+                "fingerprint": {
+                    "type": "string"
+                },
+                "refresh_token": {
+                    "type": "string"
+                }
+            }
+        },
         "dto.PatchOfferStatusReq": {
             "type": "object",
             "required": [
@@ -392,22 +620,66 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
-        }
-    },
-    "definitions": {
-        "dto.AddReviewDTO": {
+        },
+        "dto.RefreshReq": {
             "type": "object",
             "required": [
-                "rating",
-                "review"
+                "fingerprint"
             ],
             "properties": {
-                "rating": {
-                    "type": "integer",
-                    "maximum": 5,
-                    "minimum": 1
+                "fingerprint": {
+                    "type": "string"
                 },
-                "review": {
+                "refresh_token": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.RefreshResp": {
+            "type": "object",
+            "properties": {
+                "access_token": {
+                    "type": "string"
+                },
+                "refresh_token": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.RegistrationUserReq": {
+            "type": "object",
+            "required": [
+                "email",
+                "fingerprint",
+                "name",
+                "password",
+                "phone"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "fingerprint": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "phone": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.RegistrationUserResp": {
+            "type": "object",
+            "properties": {
+                "access_token": {
+                    "type": "string"
+                },
+                "refresh_token": {
                     "type": "string"
                 }
             }
