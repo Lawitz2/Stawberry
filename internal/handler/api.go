@@ -40,8 +40,9 @@ func SetupRouter(
 ) *gin.Engine {
 	router := gin.New()
 
-	router.Use(gin.Logger())
-	router.Use(gin.Recovery())
+	// router.Use(gin.Logger())
+	// router.Use(gin.Recovery())
+
 	// Add custom middleware using zap
 	router.Use(middleware.ZapLogger(logger))
 	router.Use(middleware.ZapRecovery(logger))

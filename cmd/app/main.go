@@ -5,6 +5,7 @@ import (
 	"github.com/EM-Stawberry/Stawberry/internal/domain/service/notification"
 	"github.com/EM-Stawberry/Stawberry/internal/domain/service/token"
 	"github.com/EM-Stawberry/Stawberry/internal/domain/service/user"
+	"github.com/EM-Stawberry/Stawberry/internal/handler/middleware"
 	"github.com/EM-Stawberry/Stawberry/internal/repository"
 	"github.com/EM-Stawberry/Stawberry/pkg/database"
 	"github.com/EM-Stawberry/Stawberry/pkg/email"
@@ -34,6 +35,7 @@ func main() {
 
 	cfg := config.LoadConfig()
 	log := logger.SetupLogger(cfg.Environment)
+	middleware.SetupGinWithZap(log)
 	log.Info("Logger initialized")
 
 	db, closer := database.InitDB(&cfg.DB)
