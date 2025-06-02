@@ -113,6 +113,10 @@ func (r *OfferRepository) UpdateOfferStatus(
 
 	err = tx.QueryRowx(updateOfferStatusQuery, args...).StructScan(&offer)
 	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return entity.Offer{}, apperror.New(apperror.Unauthorized,
+				"unauthorized to update offer status", nil)
+		}
 		return entity.Offer{}, apperror.New(apperror.DatabaseError, "error scanning into struct", err)
 	}
 
