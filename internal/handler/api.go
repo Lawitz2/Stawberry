@@ -56,6 +56,7 @@ func SetupRouter(
 	// secured это эндпойнты, которые не сработают без авторизационного токера
 	secured := base.Use(middleware.AuthMiddleware(userS, tokenS))
 
+	// test test
 	// healtcheck эндпойнты
 	{
 		base.GET("/health", healthH.health)
