@@ -526,27 +526,6 @@ const docTemplate = `{
                     }
                 }
             }
-        },
-        "/test": {
-            "get": {
-                "description": "Simple endpoint for testing purposes",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Testing"
-                ],
-                "summary": "Test endpoint",
-                "responses": {
-                    "200": {
-                        "description": "Test response",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    }
-                }
-            }
         }
     },
     "definitions": {

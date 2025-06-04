@@ -471,20 +471,6 @@ paths:
       summary: Update offer status
       tags:
       - offer
-  /test:
-    get:
-      description: Simple endpoint for testing purposes
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Test response
-          schema:
-            additionalProperties: true
-            type: object
-      summary: Test endpoint
-      tags:
-      - Testing
 securityDefinitions:
   BearerAuth:
     description: 'Bearer token for authentication. Format: "Bearer <token>"'
