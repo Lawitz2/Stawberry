@@ -41,6 +41,13 @@ func (h *HealthHandler) authCheck(c *gin.Context) {
 	})
 }
 
+// test godoc
+// @Summary Test endpoint
+// @Description Simple test endpoint for development purposes
+// @Tags health
+// @Produce json
+// @Success 200 {object} map[string]interface{} "Test response"
+// @Router /test [get]
 func (h *HealthHandler) test(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"test": "test",
