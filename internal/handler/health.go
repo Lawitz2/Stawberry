@@ -40,3 +40,16 @@ func (h *HealthHandler) authCheck(c *gin.Context) {
 		"time":         time.Now().Unix(),
 	})
 }
+
+// @Summary Test endpoint
+// @Description Simple endpoint for testing purposes
+// @Tags Testing
+// @Produce json
+// @Success 200 {object} map[string]interface{} "Test response"
+// @Router /test [get]
+func (h *HealthHandler) test(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{
+		"test": "test",
+		"time": time.Now().Unix(),
+	})
+}

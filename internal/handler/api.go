@@ -60,6 +60,7 @@ func SetupRouter(
 	// healtcheck эндпойнты
 	{
 		base.GET("/health", healthH.health)
+		base.GET("/test", healthH.test)
 		secured.GET("/auth_required", healthH.authCheck)
 	}
 
