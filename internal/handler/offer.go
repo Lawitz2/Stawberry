@@ -63,6 +63,8 @@ func (h *OfferHandler) PostOffer(c *gin.Context) {
 	c.JSON(http.StatusCreated, offer)
 }
 
+// @BasePath /api/v1
+
 // @summary Get user's offers
 // @tags offer
 // @accept json
