@@ -170,7 +170,7 @@ func (r *OfferRepository) UpdateOfferStatus(
 			MustSql()
 	}
 
-	err = tx.QueryRowx(updateOfferStatusQuery, args...).StructScan(&offer)
+	err = tx.QueryRowxContext(ctx, updateOfferStatusQuery, args...).StructScan(&offer)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return entity.Offer{}, apperror.New(apperror.Unauthorized,
@@ -197,7 +197,7 @@ func isUserShopOwner(ctx context.Context, offerID, userID uint, tx *sqlx.Tx) err
 		MustSql()
 
 	var requiredID uint
-	err := tx.QueryRowContext(ctx, validateShopOwnerIDQuery, args...).Scan(&requiredID)
+	err := tx.QueryRowxContext(ctx, validateShopOwnerIDQuery, args...).Scan(&requiredID)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return apperror.ErrUserNotFound
