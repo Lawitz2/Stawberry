@@ -26,7 +26,7 @@ linters:
     gosec:
       excludes:
         - G115
-
+        
 formatters:
   enable:
     - gofmt # checks if the code is formatted according to 'gofmt' command
