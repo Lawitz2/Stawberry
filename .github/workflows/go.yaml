@@ -1,7 +1,10 @@
 name: Go
 on:
   push:
-    branches: ["master"]
+    branches: [
+      "master",
+      "dep-test"
+    ]
   pull_request:
     branches: ["master"]
 jobs:
@@ -62,6 +65,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ github.head_ref }}
   image-build:
+    needs: swag-docs
     runs-on: ubuntu-latest
     steps:
       - name: Docker login
