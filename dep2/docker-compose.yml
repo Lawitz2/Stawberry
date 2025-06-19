@@ -1,0 +1,9 @@
+services:
+  app:
+    build:
+      context: ./..
+      dockerfile: dep2/Dockerfile
+    image: myapp:latest
+    restart: unless-stopped
+    env_file:
+      - .env
