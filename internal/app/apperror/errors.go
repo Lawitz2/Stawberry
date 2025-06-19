@@ -14,6 +14,7 @@ const (
 	InvalidToken       = "INVALID_TOKEN"
 	InvalidFingerprint = "INVALID_FINGERPRINT"
 	Conflict           = "CONFLICT"
+	Forbidden          = "FORBIDDEN"
 )
 
 type AppError interface {
@@ -82,6 +83,33 @@ const (
 // NewReviewError создает новую ошибку отзыва
 func NewReviewError(code string, message string) *ReviewError {
 	return &ReviewError{
+		Code:    code,
+		Message: message,
+	}
+}
+
+// GuestOfferError represents an error related to guest offers
+type GuestOfferError struct {
+	Code    string
+	Message string
+}
+
+// Error implements the error interface
+func (e *GuestOfferError) Error() string {
+	return e.Message
+}
+
+// Constants for guest offer error codes
+const (
+	GuestOfferInvalidData   = "guest_offer_invalid_data"
+	GuestOfferProcessFailed = "guest_offer_process_failed"
+	GuestOfferStoreNotFound = "guest_offer_store_not_found"
+	GuestOfferDatabaseError = "guest_offer_database_error"
+)
+
+// NewGuestOfferError creates a new guest offer error
+func NewGuestOfferError(code string, message string) *GuestOfferError {
+	return &GuestOfferError{
 		Code:    code,
 		Message: message,
 	}

@@ -15,278 +15,6 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/products/{id}/reviews": {
-            "get": {
-                "description": "Получает все отзывы о продукте по его ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "reviews"
-                ],
-                "summary": "Получение списка отзывов о продукте",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Product ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Список отзывов",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/entity.ProductReview"
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Некорректный ID продукта",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Внутренняя ошибка сервера",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            },
-            "post": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Добавляет новый отзыв о продукте",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "reviews"
-                ],
-                "summary": "Добавление отзыва о продукте",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Product ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "Данные отзыва",
-                        "name": "review",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dto.AddReviewDTO"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Отзыв успешно добавлен",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Некорректный ввод",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Неавторизованный доступ",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Внутренняя ошибка сервера",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/sellers/{id}/reviews": {
-            "get": {
-                "description": "Получает все отзывы о продавце по его ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "reviews"
-                ],
-                "summary": "Получение списка отзывов о продавце",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Seller ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Список отзывов",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/entity.SellerReview"
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Некорректный ID продавца",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Продавец не найден",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Внутренняя ошибка сервера",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            },
-            "post": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Добавляет новый отзыв о продавце",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "reviews"
-                ],
-                "summary": "Добавление отзыва о продавце",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Seller ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "Данные отзыва",
-                        "name": "review",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dto.AddReviewDTO"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Отзыв успешно добавлен",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Некорректный ввод",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Неавторизованный доступ",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Продавец не найден",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Внутренняя ошибка сервера",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
         "/audit/logs": {
             "get": {
                 "description": "Retrieve audit trail entries with time range filtering and pagination",
@@ -505,6 +233,61 @@ const docTemplate = `{
                 }
             }
         },
+        "/guest/offers": {
+            "post": {
+                "description": "Allows sending an offer for a product on behalf of a guest",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "guest"
+                ],
+                "summary": "Send a guest offer",
+                "parameters": [
+                    {
+                        "description": "Guest offer data",
+                        "name": "offer",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/guestoffer.GuestPostOfferReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "202": {
+                        "description": "Offer accepted and forwarded",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid guest offer data",
+                        "schema": {
+                            "$ref": "#/definitions/apperror.Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Store or product not found",
+                        "schema": {
+                            "$ref": "#/definitions/apperror.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/apperror.Error"
+                        }
+                    }
+                }
+            }
+        },
         "/health": {
             "get": {
                 "description": "Возвращает статус сервера и текущее время",
@@ -526,7 +309,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/offers/user": {
+        "/offers": {
             "get": {
                 "consumes": [
                     "application/json"
@@ -563,6 +346,61 @@ const docTemplate = `{
                     },
                     "400": {
                         "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/apperror.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/apperror.Error"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "offer"
+                ],
+                "summary": "Create offer",
+                "parameters": [
+                    {
+                        "description": "Offer creation request",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.PostOfferReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/dto.PostOfferResp"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/apperror.Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/apperror.Error"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
                         "schema": {
                             "$ref": "#/definitions/apperror.Error"
                         }
@@ -641,6 +479,402 @@ const docTemplate = `{
                         "description": "Internal Server Error",
                         "schema": {
                             "$ref": "#/definitions/apperror.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/products": {
+            "get": {
+                "description": "Возвращает список продуктов по фильтру (категория, цена, магазин, имя, атрибуты) с поддержкой пагинации",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "products"
+                ],
+                "summary": "Получить список продуктов с фильтрацией и пагинацией",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Номер страницы (по умолчанию 1)",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Размер страницы (по умолчанию 10, максимум 100)",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Фильтр по названию продукта (поиск по подстроке)",
+                        "name": "name",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Минимальная цена (в копейках)",
+                        "name": "min_price",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Максимальная цена (в копейках)",
+                        "name": "max_price",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "ID категории (с учетом подкатегорий)",
+                        "name": "category_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "ID магазина",
+                        "name": "shop_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "JSON-строка с фильтрами по атрибутам (exmpl: {",
+                        "name": "attributes",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Список продуктов и метаинформация",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "400": {
+                        "description": "Некорректный запрос",
+                        "schema": {
+                            "$ref": "#/definitions/apperror.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Ошибка сервера при получении продуктов",
+                        "schema": {
+                            "$ref": "#/definitions/apperror.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/products/{id}": {
+            "get": {
+                "description": "Возвращает один продукт по его идентификатору",
+                "tags": [
+                    "products"
+                ],
+                "summary": "Получить продукт по его ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID продукта",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/entity.Product"
+                        }
+                    },
+                    "400": {
+                        "description": "Некорректный ID",
+                        "schema": {
+                            "$ref": "#/definitions/apperror.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Ошибка сервера при получении продукта",
+                        "schema": {
+                            "$ref": "#/definitions/apperror.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/products/{id}/reviews": {
+            "get": {
+                "description": "Получает все отзывы о продукте по его ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "reviews"
+                ],
+                "summary": "Получение списка отзывов о продукте",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Product ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Список отзывов",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/entity.ProductReview"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Некорректный ID продукта",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Добавляет новый отзыв о продукте",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "reviews"
+                ],
+                "summary": "Добавление отзыва о продукте",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Product ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Данные отзыва",
+                        "name": "review",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.AddReviewDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Отзыв успешно добавлен",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Некорректный ввод",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Неавторизованный доступ",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/sellers/{id}/reviews": {
+            "get": {
+                "description": "Получает все отзывы о продавце по его ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "reviews"
+                ],
+                "summary": "Получение списка отзывов о продавце",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Seller ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Список отзывов",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/entity.SellerReview"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Некорректный ID продавца",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Продавец не найден",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Добавляет новый отзыв о продавце",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "reviews"
+                ],
+                "summary": "Добавление отзыва о продавце",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Seller ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Данные отзыва",
+                        "name": "review",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.AddReviewDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Отзыв успешно добавлен",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Некорректный ввод",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Неавторизованный доступ",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Продавец не найден",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
                         }
                     }
                 }
@@ -797,6 +1031,38 @@ const docTemplate = `{
                 }
             }
         },
+        "dto.PostOfferReq": {
+            "type": "object",
+            "required": [
+                "currency",
+                "price",
+                "product_id",
+                "shop_id"
+            ],
+            "properties": {
+                "currency": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "product_id": {
+                    "type": "integer"
+                },
+                "shop_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "dto.PostOfferResp": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
         "dto.RefreshReq": {
             "type": "object",
             "required": [
@@ -860,6 +1126,39 @@ const docTemplate = `{
                 }
             }
         },
+        "entity.Product": {
+            "type": "object",
+            "properties": {
+                "average_rating": {
+                    "type": "number"
+                },
+                "category_id": {
+                    "type": "integer"
+                },
+                "count_reviews": {
+                    "type": "integer"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "maximal_price": {
+                    "type": "integer"
+                },
+                "minimal_price": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "product_attributes": {
+                    "type": "object",
+                    "additionalProperties": true
+                }
+            }
+        },
         "entity.ProductReview": {
             "type": "object",
             "properties": {
@@ -905,6 +1204,41 @@ const docTemplate = `{
                     "type": "integer"
                 }
             }
+        },
+        "guestoffer.GuestPostOfferReq": {
+            "type": "object",
+            "required": [
+                "currency",
+                "guest_email",
+                "guest_name",
+                "guest_phone",
+                "offer_price",
+                "product_id",
+                "store_id"
+            ],
+            "properties": {
+                "currency": {
+                    "type": "string"
+                },
+                "guest_email": {
+                    "type": "string"
+                },
+                "guest_name": {
+                    "type": "string"
+                },
+                "guest_phone": {
+                    "type": "string"
+                },
+                "offer_price": {
+                    "type": "number"
+                },
+                "product_id": {
+                    "type": "integer"
+                },
+                "store_id": {
+                    "type": "integer"
+                }
+            }
         }
     },
     "securityDefinitions": {
@@ -919,12 +1253,12 @@ const docTemplate = `{
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "",
+	Version:          "1.0",
 	Host:             "",
 	BasePath:         "",
 	Schemes:          []string{},
-	Title:            "",
-	Description:      "",
+	Title:            "Stawberry API",
+	Description:      "Это API для управления сделками по продуктам.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",

@@ -1,3 +1,6 @@
+// @title			Stawberry API
+// @version		1.0
+// @description	Это API для управления сделками по продуктам.
 // @securityDefinitions.apikey BearerAuth
 // @in header
 // @name Authorization
@@ -6,23 +9,29 @@
 package handler
 
 import (
+	"github.com/gin-gonic/gin/binding"
+	"github.com/go-playground/validator/v10"
+	"golang.org/x/text/currency"
 
 	// Импорт сваггер-генератора
-	_ "github.com/EM-Stawberry/Stawberry/docs"
+	"github.com/EM-Stawberry/Stawberry/docs"
 	"github.com/EM-Stawberry/Stawberry/internal/handler/middleware"
 	"github.com/EM-Stawberry/Stawberry/internal/handler/reviews"
+	"github.com/EM-Stawberry/Stawberry/pkg/database"
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"go.uber.org/zap"
+
+	guesthandler "github.com/EM-Stawberry/Stawberry/internal/handler/guestoffer"
 )
 
-// @Summary Получить статус сервера
-// @Description Возвращает статус сервера и текущее время
-// @Tags health
-// @Produce json
-// @Success 200 {object} map[string]interface{} "Успешный ответ с данными"
-// @Router /health [get]
+// @Summary		Получить статус сервера
+// @Description	Возвращает статус сервера и текущее время
+// @Tags			health
+// @Produce		json
+// @Success		200	{object}	map[string]interface{}	"Успешный ответ с данными"
+// @Router			/health [get]
 func SetupRouter(
 	healthH *HealthHandler,
 	productH *ProductHandler,
@@ -31,6 +40,7 @@ func SetupRouter(
 	notificationH *NotificationHandler,
 	productReviewH *reviews.ProductReviewsHandler,
 	sellerReviewH *reviews.SellerReviewsHandler,
+	guestOfferH *guesthandler.Handler,
 	userS middleware.UserGetter,
 	tokenS middleware.TokenValidator,
 	basePath string,
@@ -40,6 +50,9 @@ func SetupRouter(
 ) *gin.Engine {
 	router := gin.New()
 
+	// Добавляет кастомные валидаторы для использования в json-тегах
+	setupValitators()
+
 	router.Use(auditMiddleware.Middleware())
 	router.Use(middleware.ZapLogger(logger))
 	router.Use(middleware.ZapRecovery(logger))
@@ -48,6 +61,7 @@ func SetupRouter(
 	router.Use(middleware.Timeout())
 
 	// Swagger UI эндпоинт
+	docs.SwaggerInfo.BasePath = basePath
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	// base это эндпойнты без префикса версии
@@ -74,11 +88,22 @@ func SetupRouter(
 		auth.POST("/logout", userH.Logout)
 		auth.POST("/refresh", userH.Refresh)
 	}
+	// эндпойнты для продуктов
+	{
+		public.GET("/products", productH.GetProducts)
+		public.GET("/products/:id", productH.GetProductByID)
+	}
+
+	// эндпойнты для гостевых заявок
+	{
+		base.POST("/guest/offers", guestOfferH.PostGuestOffer)
+	}
 
 	// эндпойнты запросов на покупку
 	{
 		secured.PATCH("offers/:offerID", offerH.PatchOfferStatus)
 		secured.GET("offers", offerH.GetUserOffers)
+		secured.POST("offers", offerH.PostOffer)
 	}
 
 	// эндпойнты отзывов
@@ -93,9 +118,38 @@ func SetupRouter(
 	// admin := secured.Group("/admin", middleware.Admin)
 	secured.GET("/audit", auditH.DisplayLogs)
 
+	// Эндпоинты для бд
+	{
+		secured.POST("/dev/seed-db", seedDB)
+		secured.POST("/dev/clear-db", clearDB)
+	}
+
 	// Эти заглушки можно убрать после реализации соответствующих хендлеров
 	_ = productH
 	_ = notificationH
 
 	return router
+}
+
+func setupValitators() {
+	// привязка валидатора кодов валюты (прим: USD, RUB и т.д.)
+	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
+		_ = v.RegisterValidation("iso4217", currencyValidator)
+	}
+
+}
+
+// реализация валидатора кодов валюты
+var currencyValidator validator.Func = func(fl validator.FieldLevel) bool {
+	currencyCode := fl.Field().String()
+	_, err := currency.ParseISO(currencyCode)
+	return err == nil
+}
+
+func seedDB(c *gin.Context) {
+	database.SeedDB()
+}
+
+func clearDB(c *gin.Context) {
+	database.ClearDB()
 }
