@@ -470,7 +470,7 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/apperror.Error'
-      summary: Get user's offers
+      summary: Get user's offers (TEST TEXT)
       tags:
       - offer
     post:
