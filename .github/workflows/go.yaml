@@ -60,8 +60,9 @@ jobs:
             git add docs/*
             git commit -m "docs: update swagger documentation [ci skip]" || echo "No changes to commit"
             git pull origin ${{ github.head_ref }} --rebase
-        - name: Push Changes
-          uses: ad-m/github-push-action@master
+            git push origin ${{github.head_ref}}
+#        - name: Push Changes
+#          uses: ad-m/github-push-action@master
           with:
             github_token: ${{ secrets.GITHUB_TOKEN }}
             branch: ${{ github.head_ref }}
