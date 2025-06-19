@@ -77,9 +77,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Debug Docker Username
-        run: echo "Username is ${{ secrets.DOCKER_USERNAME }}"
+        run: echo Username is ${{ secrets.DOCKER_USERNAME }}
       - name: debug some more
-        run: echo "Pswd is ${{secrets.DOCKER_PSWD }}
+        run: echo Pswd is ${{secrets.DOCKER_PSWD }}
       - name: Docker login
         uses: docker/login-action@v3
         with:
