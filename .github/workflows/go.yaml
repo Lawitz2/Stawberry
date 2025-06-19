@@ -69,8 +69,11 @@ jobs:
 #        with:
 #          github_token: ${{ secrets.GITHUB_TOKEN }}
 #          branch: ${{ github.head_ref }}
+
+
+  #    needs: swag-docs
+
   image-build:
-#    needs: swag-docs
     runs-on: ubuntu-latest
     steps:
       - name: Docker login
