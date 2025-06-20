@@ -79,4 +79,4 @@ jobs:
           context: .
           file: ./dep2/Dockerfile
           push: true
-          tags: ${{secrets.DOCKER_USERNAME}}/testrepo/myapp:1
+          tags: ${{secrets.DOCKER_USERNAME}}/myapp:v1
