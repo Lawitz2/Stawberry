@@ -97,7 +97,7 @@ func (h *OfferHandler) PostOffer(c *gin.Context) {
 
 // @BasePath /api/v1
 
-// @summary Get user's offers
+// @summary Get user's offers AWOOGA
 // @tags offer
 // @accept json
 // @produce json
