@@ -76,5 +76,6 @@ jobs:
         - name: Build Docker Image and push
           uses: docker/build-push-action@v6
           with:
+            file: ./dep2/Dockerfile
             push: true
             tags: myapp:latest
