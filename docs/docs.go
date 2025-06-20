@@ -320,7 +320,7 @@ const docTemplate = `{
                 "tags": [
                     "offer"
                 ],
-                "summary": "Get user's offers",
+                "summary": "Get user's offers AWOOGA",
                 "parameters": [
                     {
                         "type": "integer",
