@@ -79,4 +79,6 @@ jobs:
           context: .
           file: ./dep2/Dockerfile
           push: true
-          tags: ${{secrets.DOCKER_USERNAME}}/myapp:${{github.sha}}
+          tags: |
+            ${{secrets.DOCKER_USERNAME}}/myapp:${{github.sha}}
+            ${{secrets.DOCKER_USERNAME}}/myapp:latest
