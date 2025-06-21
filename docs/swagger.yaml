@@ -506,7 +506,7 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/apperror.Error'
-      summary: Create offer NUMBER SIXTEEN
+      summary: Create offer NUMBER SEVENTEEN
       tags:
       - offer
   /offers/{offerID}:
