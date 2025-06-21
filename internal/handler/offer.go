@@ -33,7 +33,7 @@ func NewOfferHandler(offerService OfferService) *OfferHandler {
 	return &OfferHandler{offerService: offerService}
 }
 
-// @summary Create offer NUMBER FIFTEEN
+// @summary Create offer NUMBER SIXTEEN
 // @tags offer
 // @accept json
 // @produce json
