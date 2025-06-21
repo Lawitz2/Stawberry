@@ -246,7 +246,7 @@ var _ = ginkgo.Describe("offer handlers", ginkgo.Ordered, func() {
 
 			var ofr dto.PatchOfferStatusResp
 			_ = json.Unmarshal(rec.Body.Bytes(), &ofr)
-			gomega.Expect(ofr.NewStatus).To(gomega.Equal("accepted"))
+			gomega.Expect(ofr.NewStatus).To(gomega.Equal("acceptedNOPE"))
 		})
 
 		ginkgo.It("fails data validation if the offerID is negative", func() {
