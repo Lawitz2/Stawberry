@@ -368,7 +368,7 @@ const docTemplate = `{
                 "tags": [
                     "offer"
                 ],
-                "summary": "Create offer THIS IS A TEST TEXT PLEASE IGNORE NUMBER FIVE",
+                "summary": "Create offer THIS IS A TEST TEXT PLEASE IGNORE NUMBER SIX",
                 "parameters": [
                     {
                         "description": "Offer creation request",
