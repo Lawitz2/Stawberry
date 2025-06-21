@@ -33,7 +33,7 @@ func NewOfferHandler(offerService OfferService) *OfferHandler {
 	return &OfferHandler{offerService: offerService}
 }
 
-// @summary Create offer
+// @summary Create offer THIS IS A TEST TEXT PLEASE IGNORE NUMBER THREE
 // @tags offer
 // @accept json
 // @produce json
@@ -97,7 +97,7 @@ func (h *OfferHandler) PostOffer(c *gin.Context) {
 
 // @BasePath /api/v1
 
-// @summary Get user's offers UNGA BUNGA
+// @summary Get user's offers
 // @tags offer
 // @accept json
 // @produce json

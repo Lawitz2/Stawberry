@@ -320,7 +320,7 @@ const docTemplate = `{
                 "tags": [
                     "offer"
                 ],
-                "summary": "Get user's offers UNGA BUNGA",
+                "summary": "Get user's offers",
                 "parameters": [
                     {
                         "type": "integer",
@@ -368,7 +368,7 @@ const docTemplate = `{
                 "tags": [
                     "offer"
                 ],
-                "summary": "Create offer",
+                "summary": "Create offer THIS IS A TEST TEXT PLEASE IGNORE NUMBER THREE",
                 "parameters": [
                     {
                         "description": "Offer creation request",
