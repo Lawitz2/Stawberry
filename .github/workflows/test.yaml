@@ -1,11 +1,7 @@
 name: test
 
 on:
-  workflow_run:
-    workflows:
-      - Go
-    types:
-      - completed
+  push:
     branches:
       - master
 
