@@ -43,7 +43,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.head_ref }}
+          ref: ${{ github.head_ref || github.ref_name }}
           fetch-depth: 0
           persist-credentials: true
       - uses: actions/setup-go@v5
@@ -54,13 +54,18 @@ jobs:
           go install github.com/swaggo/swag/cmd/swag@latest
           swag init -g ./internal/handler/api.go -o docs
       - name: Commit Documentation
-        run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
-          git add docs/*
-          git commit -m "docs: update swagger documentation [docs]" || echo "No changes to commit"
-          git pull origin ${{ github.head_ref }} --rebase
-          git push origin ${{github.head_ref}}
+        uses: stefanzweifel/git-auto-commit-action@v6
+        with:
+          commit_message: "docs: update swagger documentation"
+          file_pattern: "docs/*"
+          commit_options: --no-verify
+#        run: |
+#          git config --global user.name "GitHub Actions"
+#          git config --global user.email "actions@github.com"
+#          git add docs/*
+#          git commit -m "docs: update swagger documentation [docs]" || echo "No changes to commit"
+#          git pull origin ${{ github.head_ref }} --rebase
+#          git push origin ${{github.head_ref}}
 
 #  image-build:
 #    if: github.event_name == 'push' && github.event.ref == 'refs/heads/master'
