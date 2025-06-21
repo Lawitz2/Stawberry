@@ -506,7 +506,7 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/apperror.Error'
-      summary: Create offer THIS IS A TEST TEXT PLEASE IGNORE NUMBER THREE
+      summary: Create offer THIS IS A TEST TEXT PLEASE IGNORE NUMBER FIVE
       tags:
       - offer
   /offers/{offerID}:
